@@ -35,7 +35,7 @@ const API = {
         }
     },
     getUserPendingNotifications: async email => {
-        const query = `SELECT * FROM apNotificationBucket WHERE userEmail = '${email}' AND hasReceived = false ORDER BY dateCreated;`
+        const query = `SELECT * FROM apNotificationBucket WHERE userEmail = '${email}' AND hasReceived = false OR hasRead = false ORDER BY dateCreated;`
         const notificationsDocs = await notificationBucket.queryDB(query);
         const notifications = notificationsDocs.map(doc => doc.apNotificationBucket);
         return notifications;

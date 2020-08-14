@@ -20,6 +20,7 @@ router.post('/notification', async (req, res) => {
 // PIXEL API to update if a notification has been read
 router.get('/notification/read/:id', async (req ,res) => {
     const notificationId = req.params.id;
+    console.log(`Notification Read ${notificationId}`);
     if (!notificationId) return res.status(404).send();
     await notificationService.setNotificationRead(notificationId);
     res.send();

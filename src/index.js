@@ -26,7 +26,7 @@ io.use((socket, next) => {
     // MAKE sure it's not adpushup using the account
     const tokenPayload = authService.decodeAuthToken(authToken);
     // comment this out during testing.
-    if (tokenPayload.isSuperUser) return next(new Error('Not super user'));
+    // if (tokenPayload.isSuperUser) return next(new Error('Not super user'));
     next();
 });
 

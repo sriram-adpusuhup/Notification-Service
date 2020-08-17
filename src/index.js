@@ -17,6 +17,10 @@ app.locals.io = io;
 
 app.use(routes);
 
+app.get('/', (req, res) => {
+    return res.send('Notification Service Up and Running');
+});
+
 // authorize users;
 io.use((socket, next) => {
     const authToken = socket.handshake.query.authToken;

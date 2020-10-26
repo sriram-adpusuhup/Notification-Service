@@ -32,13 +32,11 @@ io.use((socket, next) => {
   }
   // MAKE sure it's not adpushup using the account
   const tokenPayload = authService.decodeAuthToken(authToken);
-  // comment this out during testing.
-  if (tokenPayload.isSuperUser) return next(new Error("Not super user"));
+  if (tokenPayload.isSuperUser && config.ENV === 'production') return next(new Error("Blocking super user"));
   next();
 });
 
 io.on("connection", async (socket) => {
-  console.log("connecting...");
   const authToken = socket.handshake.query.authToken;
   const user = authService.decodeAuthToken(authToken);
   socket.join(user.email);

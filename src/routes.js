@@ -1,6 +1,7 @@
 const express = require("express");
 const notificationService = require("./services/notificationService");
 const authService = require("./services/authService");
+const config = require('./../configs/config');
 const router = express.Router();
 
 router.post("/notification", async (req, res) => {
@@ -63,6 +64,38 @@ router.get("/notification", async (req, res) => {
     notifications,
     hasMore,
   });
+});
+
+// TODO: figure out service to service authentication for 
+router.get('/notifications', async(req, res) => {
+  const authorization = req.headers.authorization;
+
+  if (!authorization || !authorization === config.ADMIN_TOKEN) {
+    return res.status(401).send('UnAuthorized Access');
+  }
+
+  let notifications = await notificationService.getAllNotifications();
+
+  if (req.query.groupById && notifications.length) {
+    notifications = notifications.reduce((result, notification) => {
+      let groupId;
+      if (notification.notificationMeta && notification.notificationMeta && notification.notificationMeta.groupId) {
+        groupId = notification.notificationMeta.groupId;
+      } else {
+        groupId = 'UNKNOWN'
+      }
+      if (!result[groupId]) result[groupId] = [];
+      return {
+        ...result,
+        [groupId]: [
+          ...result[groupId],
+          notification
+        ]
+      }
+    }, {});
+  }
+
+  return res.json(notifications);
 });
 
 module.exports = router;

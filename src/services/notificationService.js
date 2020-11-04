@@ -65,7 +65,7 @@ const API = {
     const offset = parseInt(page) * parseInt(count);
     const query = `SELECT * FROM apNotificationBucket WHERE userEmail = '${email}' OFFSET ${offset} LIMIT ${count}`;
     const notificationDocs = await couchbaseService.queryDB(query);
-    const notifications = notificationDocs.map((doc) => doc.apcouchbaseService);
+    const notifications = notificationDocs.map((doc) => doc.apNotificationBucket);
     return notifications;
   },
   getNotificationsCount: async (email) => {
@@ -92,6 +92,11 @@ const API = {
     }
     return Promise.resolve();
   },
+  getAllNotifications: async() => {
+    const query = `SELECT * FROM apNotificationBucket`;
+    const notificationDocs = await couchbaseService.queryDB(query);
+    return notificationDocs.map(doc => doc.apNotificationBucket);
+  }
 };
 
 module.exports = API;
